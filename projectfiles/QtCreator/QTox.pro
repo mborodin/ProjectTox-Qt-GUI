@@ -28,7 +28,7 @@ defineTest(minQtVersion) {
     error("Cannot build with Qt version $${QT_VERSION}, this project requires at least Qt 5.2.0")
 }
 
-QT       += core gui widgets
+QT       += core gui widgets xml
 
 TARGET = TOX-Qt-GUI
 TEMPLATE = app
@@ -92,7 +92,10 @@ SOURCES += \
     ../../src/frienditemdelegate.cpp \
     ../../src/editablelabelwidget.cpp \
     ../../src/esclineedit.cpp \
-    ../../src/copyableelidelabel.cpp
+    ../../src/copyableelidelabel.cpp \
+    ../../src/account.cpp \
+    ../../src/loginwindow.cpp \
+    ../../src/createnewaccountwizardpage.cpp
 
 HEADERS  += \
     ../../src/mainwindow.hpp \
@@ -135,7 +138,10 @@ HEADERS  += \
     ../../src/frienditemdelegate.hpp \
     ../../src/editablelabelwidget.hpp \
     ../../src/esclineedit.hpp \
-    ../../src/copyableelidelabel.hpp
+    ../../src/copyableelidelabel.hpp \
+    ../../src/account.h \
+    ../../src/loginwindow.hpp \
+    ../../src/createnewaccountwizardpage.hpp
 
 ### ToxCore section. Please keep it alphabetical ###
 
@@ -179,4 +185,15 @@ HEADERS  += \
 RESOURCES += \
     ../../resources/resources.qrc
 
+TRANSLATIONS = translations/i18n_en.ts \
+    translations/i18n_de.ts \
+    translations/i18n_uk.ts \
+    translations/i18n_pl.ts \
+    translations/i18n_ru.ts \
+    translations/i18n_cz.ts
+
 win32:RC_FILE = ../../resources/win32_appicon.rc
+
+FORMS +=
+
+OTHER_FILES +=
