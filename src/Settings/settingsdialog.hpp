@@ -22,6 +22,7 @@
 
 class SettingsDialog: public BasicSettingsDialog
 {
+  Q_OBJECT
 protected:
     static int showDialog(QWidget *parent);
 
