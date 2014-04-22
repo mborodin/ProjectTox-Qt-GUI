@@ -15,16 +15,28 @@ Account::Account(QObject *parent) :
 
 int Account::acceptFriendRequest(uint8_t *userId)
 {
-    return tox_add_friend_norequest(tox, userId);
+    int ret = tox_add_friend_norequest(tox, userId);
+    if(ret != -1)
+      saveState();
+    
+    return ret;
 }
 
 int Account::sendFriendRequest(uint8_t *userId, uint8_t *message, size_t len)
 {
-    return tox_add_friend(tox, userId, message, len);
+    int ret = tox_add_friend(tox, userId, message, len);
+    if(ret != -1)
+      saveState();
+    
+    return ret;
 }
 
 int Account::removeFriend(int userId) {
-    return tox_del_friend(tox, userId);
+    int ret = tox_del_friend(tox, userId);
+    if(ret != -1)
+      saveState();
+    
+    return ret;
 }
 
 QString Account::getAddress() const
@@ -46,7 +58,11 @@ int Account::sendAction(int userId, uint8_t *action, size_t len)
 
 int Account::setAlias(uint8_t *alias, size_t len)
 {
-    return tox_set_name(tox, alias, len);
+    int ret = tox_set_name(tox, alias, len);
+    if(ret != -1)
+      saveState();
+    
+    return ret;
 }
 
 QString Account::getAlias() const {
@@ -58,7 +74,11 @@ QString Account::getAlias() const {
 
 int Account::setStatusMessage(uint8_t *message, size_t len)
 {
-    return tox_set_status_message(tox, message, len);
+    int ret = tox_set_status_message(tox, message, len);
+    if(ret != -1)
+      saveState();
+    
+    return ret;
 }
 
 QString Account::getStatusMessage() const
@@ -86,7 +106,11 @@ int Account::setStatus(const Status &status) {
             break;
     }
 
-    return tox_set_user_status(tox, userstatus);
+    int ret = tox_set_user_status(tox, userstatus);
+    if(ret != -1)
+      saveState();
+    
+    return ret;
 }
 
 QString Account::getFriendUserId(int fId) const
@@ -190,8 +214,6 @@ void Account::save(const QString &file, const QString &password) const
     uint8_t* data;
     uint32_t len;
 
-    //tox = tox_new(ipV6Enabled);
-
     if(password.length()) {
         len = tox_size_encrypted(tox);
         data = new uint8_t[len];
@@ -230,8 +252,16 @@ int Account::load(const QString &file, const QString& password)
 
     fin.close();
     delete [] data;
+    
+    pass = password;
+    stateFile = file;
 
     return res;
+}
+
+void Account::saveState()
+{
+  save(stateFile, pass);
 }
 
 void Account::onFriendRequest(Tox*/* tox*/, uint8_t* cUserId, uint8_t* cMessage, uint16_t cMessageSize, void* core)

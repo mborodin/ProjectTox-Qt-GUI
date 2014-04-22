@@ -58,9 +58,13 @@ private:
     static void onUserStatusChanged(Tox* tox, int friendId, uint8_t userstatus, void* core);
     static void onConnectionStatusChanged(Tox* tox, int friendId, uint8_t status, void* core);
     static void onAction(Tox* tox, int friendId, uint8_t* cMessage, uint16_t cMessageSize, void* core);
+    
+    void saveState();
 
     Tox* tox;
     bool ipV6Enabled;
+    QString pass;
+    QString stateFile;
 
 signals:
     void accountAdded(AccountPtr account);
