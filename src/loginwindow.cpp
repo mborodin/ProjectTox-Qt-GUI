@@ -187,6 +187,7 @@ void LoginWindow::onLoginClicked() {
     wnd->setAccount(account);
 
     wnd->show();
+    this->hide();
 }
 
 void LoginWindow::loadUsers() {
