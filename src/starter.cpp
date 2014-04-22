@@ -18,21 +18,21 @@
 #include "Settings/settings.hpp"
 
 Starter::Starter(QObject* parent) :
-    QObject(parent), mainWindow(nullptr)
+    QObject(parent), loginWindow(nullptr)
 {
     // place a login dialog here
-    createMainWindow();
+    createLoginWindow();
 }
 
 Starter::~Starter()
 {
-    if (mainWindow) {
-        delete mainWindow;
+    if (loginWindow) {
+        delete loginWindow;
     }
 }
 
-void Starter::createMainWindow()
+void Starter::createLoginWindow()
 {
-    mainWindow = new MainWindow();
-    mainWindow->show();
+    loginWindow = new LoginWindow();
+    loginWindow->show();
 }

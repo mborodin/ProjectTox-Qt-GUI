@@ -17,7 +17,7 @@
 #ifndef STARTER_HPP
 #define STARTER_HPP
 
-#include "mainwindow.hpp"
+#include "loginwindow.hpp"
 
 #include <QObject>
 
@@ -29,9 +29,9 @@ public:
     ~Starter();
 
 private:
-    MainWindow* mainWindow;
+    LoginWindow* loginWindow;
 
-    void createMainWindow();
+    void createLoginWindow();
 
 };
 
