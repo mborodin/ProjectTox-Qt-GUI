@@ -1,0 +1,4 @@
+[Project]
+Name=QTox
+Manager=KDevCMakeManager
+VersionControl=kdevgit
