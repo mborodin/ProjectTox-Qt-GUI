@@ -2,10 +2,7 @@
 #define CREATENEWACCOUNTWIZARDPAGE_HPP
 
 #include <QWizardPage>
-
-namespace Ui {
-class CreateNewAccountWizardPage;
-}
+#include <QLineEdit>
 
 class CreateNewAccountWizardPage : public QWizardPage
 {
@@ -16,7 +13,9 @@ public:
     ~CreateNewAccountWizardPage();
 
 private:
-    Ui::CreateNewAccountWizardPage *ui;
+    QLineEdit *user;
+    QLineEdit *password;
+
 };
 
 #endif // CREATENEWACCOUNTWIZARDPAGE_HPP
