@@ -36,6 +36,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void setAccount(std::shared_ptr<Account>& account);
 
 protected:
     void closeEvent(QCloseEvent *event);

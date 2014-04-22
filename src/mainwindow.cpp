@@ -109,9 +109,7 @@ MainWindow::MainWindow(QWidget* parent)
     core = new Core();
 
     coreThread = new QThread(this);
-    core->moveToThread(coreThread);
-    connect(coreThread, &QThread::started, core, &Core::start);
-
+    core->init(coreThread);
     qRegisterMetaType<Status>("Status");
 
     connect(core, &Core::connected, this, &MainWindow::onConnected);
@@ -193,6 +191,11 @@ MainWindow::~MainWindow()
     coreThread->quit();
     coreThread->wait();
     delete core;
+}
+
+void MainWindow::setAccount(std::shared_ptr<Account> &account)
+{
+    core->accountAdded(account);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
