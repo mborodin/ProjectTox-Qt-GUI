@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     // used in QStandardPaths
-    a.setApplicationName("Qt GUI");
+    a.setApplicationName("QTox");
     a.setOrganizationName("Tox");
     qApp->setQuitOnLastWindowClosed(false);
     Starter s;
