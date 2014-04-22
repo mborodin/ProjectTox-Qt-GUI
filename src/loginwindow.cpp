@@ -216,7 +216,13 @@ void LoginWindow::loadUsers() {
 
 void LoginWindow::userSelected(int index) {
     QPair<bool, QString> data = qvariant_cast<QPair<bool,QString>>(userName->itemData(index));
+    bool isEnabled = password->isEnabled();
     password->setDisabled(!data.first);
+    
+    if(isEnabled == password->isEnabled() && !isEnabled) {
+      password->setText("");
+    }
+    
     if(data.second.startsWith('/'))
         tox = data.second;
     else
