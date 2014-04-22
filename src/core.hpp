@@ -18,12 +18,14 @@
 #define CORE_HPP
 
 #include "status.hpp"
-
-#include <tox.h>
+#include "account.h"
 
 #include <QObject>
 #include <QTimer>
 #include <QList>
+#include <QThread>
+
+class MainWindow;
 
 class Core : public QObject
 {
@@ -32,19 +34,14 @@ public:
     explicit Core();
     ~Core();
 
+    void init(QThread* coreThread);
+
 private:
-    static void onFriendRequest(Tox* tox, uint8_t* cUserId, uint8_t* cMessage, uint16_t cMessageSize, void* core);
-    static void onFriendMessage(Tox* tox, int friendId, uint8_t* cMessage, uint16_t cMessageSize, void* core);
-    static void onFriendNameChange(Tox* tox, int friendId, uint8_t* cName, uint16_t cNameSize, void* core);
-    static void onStatusMessageChanged(Tox* tox, int friendId, uint8_t* cMessage, uint16_t cMessageSize, void* core);
-    static void onUserStatusChanged(Tox* tox, int friendId, uint8_t userstatus, void* core);
-    static void onConnectionStatusChanged(Tox* tox, int friendId, uint8_t status, void* core);
-    static void onAction(Tox* tox, int friendId, uint8_t* cMessage, uint16_t cMessageSize, void* core);
 
     void checkConnection();
 
-    Tox* tox;
     QTimer* timer;
+    std::shared_ptr<Account> account;
 
     class CData
     {
@@ -65,6 +62,7 @@ private:
         static uint16_t fromString(const QString& userId, uint8_t* cData);
     };
 
+    public:
     class CUserId : public CData
     {
     public:
@@ -112,6 +110,8 @@ private:
 public slots:
     void start();
 
+    void accountAdded(std::shared_ptr<Account> account);
+
     void acceptFriendRequest(const QString& userId);
     void requestFriendship(const QString& friendAddress, const QString& message);
 
@@ -122,7 +122,7 @@ public slots:
 
     void setUsername(const QString& username);
     void setStatusMessage(const QString& message);
-    void setStatus(Status status);
+    void setStatus(const Status& status);
 
     void process();
 
@@ -135,7 +135,7 @@ signals:
     void friendRequestRecieved(const QString& userId, const QString& message);
     void friendMessageRecieved(int friendId, const QString& message);
 
-    void friendAdded(int friendId, const QString& userId);
+    void friendAdded(int friendId, const QString& userId, const Status& status);
 
     void friendStatusChanged(int friendId, Status status);
     void friendStatusMessageChanged(int friendId, const QString& message);
@@ -147,7 +147,7 @@ signals:
 
     void usernameSet(const QString& username);
     void statusMessageSet(const QString& message);
-    void statusSet(Status status);
+    void statusSet(const Status& status);
 
     void messageSentResult(int friendId, const QString& message, int messageId);
     void actionSentResult(int friendId, const QString& action, int success);
@@ -156,7 +156,7 @@ signals:
     void failedToRemoveFriend(int friendId);
     void failedToSetUsername(const QString& username);
     void failedToSetStatusMessage(const QString& message);
-    void failedToSetStatus(Status status);
+    void failedToSetStatus(const Status& status);
 
     void actionReceived(int friendId, const QString& acionMessage);
 
