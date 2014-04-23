@@ -20,6 +20,7 @@
 #include "chatpagewidget.hpp"
 
 #include <QStackedWidget>
+#include <QHash>
 
 class PagesWidget : public QStackedWidget
 {
@@ -29,6 +30,8 @@ public:
 
 private:
     ChatPageWidget* widget(int64_t friendId) const;
+    
+    QHash<int64_t, ChatPageWidget*> pages;
 
 private slots:
     void onMessageSent(const QString& message);

@@ -30,12 +30,8 @@ PagesWidget::PagesWidget(QWidget* parent) :
 // if preformance would be critical, replace with QHash<int friendId, ChatPageWidget*>
 ChatPageWidget* PagesWidget::widget(int64_t friendId) const
 {
-    for (int i = 0; i < count(); i++) {
-        ChatPageWidget* chatPage = dynamic_cast<ChatPageWidget*>(QStackedWidget::widget(i));
-        if (chatPage != nullptr && chatPage->getFriendId() == friendId) {
-            return chatPage;
-        }
-    }
+    if(pages.contains(friendId))
+        return pages[friendId]; 
     return nullptr;
 }
 
