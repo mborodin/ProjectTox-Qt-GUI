@@ -151,12 +151,21 @@ signals:
 
     void messageSentResult(int friendId, const QString& message, int messageId);
     void actionSentResult(int friendId, const QString& action, int success);
+    
+    void typingChanged(int friendId, bool isTyping);
 
     void failedToAddFriend(const QString& userId);
     void failedToRemoveFriend(int friendId);
     void failedToSetUsername(const QString& username);
     void failedToSetStatusMessage(const QString& message);
     void failedToSetStatus(const Status& status);
+    
+    void groupActionReceived(int groupnumber, int friendgroupnumber, const QString& action);
+    void groupInviteReceived(int friendnumber, uint8_t *group_public_key);
+    void groupMessageReceived(int groupnumber, int friendgroupnumber, const QString& message);
+    void groupPeerAdded(int groupnumber, int peernumber);
+    void groupPeerRemoved(int groupnumber, int peernumber);
+    void groupPeerRenamed(int groupnumber, int peernumber);
 
     void actionReceived(int friendId, const QString& acionMessage);
 
