@@ -317,12 +317,12 @@ void Account::saveState()
 
 void Account::onFriendRequest(Tox*/* tox*/, uint8_t* cUserId, uint8_t* cMessage, uint16_t cMessageSize, void* core)
 {
-    emit static_cast<Core*>(core)->friendRequestRecieved(Core::CUserId::toString(cUserId), Core::CString::toString(cMessage, cMessageSize));
+    emit static_cast<Core*>(core)->friendRequestReceived(Core::CUserId::toString(cUserId), Core::CString::toString(cMessage, cMessageSize));
 }
 
 void Account::onFriendMessage(Tox*/* tox*/, int friendId, uint8_t* cMessage, uint16_t cMessageSize, void* core)
 {
-    emit static_cast<Core*>(core)->friendMessageRecieved(friendId, Core::CString::toString(cMessage, cMessageSize));
+    emit static_cast<Core*>(core)->friendMessageReceived(friendId, Core::CString::toString(cMessage, cMessageSize));
 }
 
 void Account::onFriendNameChange(Tox*/* tox*/, int friendId, uint8_t* cName, uint16_t cNameSize, void* core)
@@ -370,7 +370,7 @@ void Account::onTypingChanged(Tox* tox, int32_t friendId, int is_typing, void * 
 }
 
 void Account::onGroupAction(Tox *tox, int groupnumber, int friendgroupnumber, uint8_t * action, uint16_t length, void *core) {
-  emit static_cast<Core*>(core)->groupActionReceived(groupnumber, friendgroupnumber, Core::CString::toString(action, length));
+  static_cast<Core*>(core)->groupActionReceived(groupnumber, friendgroupnumber, Core::CString::toString(action, length));
 }
 
 void Account::onGroupInvite(Tox *tox, int friendnumber, uint8_t *group_public_key, void *core) {
@@ -378,7 +378,7 @@ void Account::onGroupInvite(Tox *tox, int friendnumber, uint8_t *group_public_ke
 }
 
 void Account::onGroupMessage(Tox *tox, int groupnumber, int friendgroupnumber, uint8_t * message, uint16_t length, void *core) {
-  emit static_cast<Core*>(core)->groupMessageReceived(groupnumber, friendgroupnumber, Core::CString::toString(message, length));
+  static_cast<Core*>(core)->groupMessageReceived(groupnumber, friendgroupnumber, Core::CString::toString(message, length));
 }
 
 void Account::onGroupNamelistChange(Tox *tox, int groupnumber, int peernumber, uint8_t change, void *core) {
