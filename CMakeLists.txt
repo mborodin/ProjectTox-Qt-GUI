@@ -9,6 +9,8 @@ find_package(Qt5LinguistTools REQUIRED)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
+option(KDE5_INTEGRATION "Build KDE5 client KTox" ON)
+
 set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 set(RESOURCES_DIR ${CMAKE_SOURCE_DIR}/resources)
 set(TRANSLATIONS_DIR ${CMAKE_SOURCE_DIR}/translations)
