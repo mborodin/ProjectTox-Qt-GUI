@@ -195,6 +195,52 @@ std::list<int> Account::getFriendList() const
     return ret;
 }
 
+int Account::createGroupChat()
+{
+  int ret = tox_add_groupchat(tox);
+  if(ret != -1)
+    saveState();
+  
+  return ret;
+}
+
+int Account::inviteFriendToGroup(int fId, int gId) {
+  int ret = tox_invite_friend(tox, fId, gId);
+  if(ret != -1)
+    saveState();
+  
+  return ret;
+}
+
+int Account::sendGroupMessage(int gId, const QString& message) const{
+  return tox_group_message_send(tox, gId, (uint8_t*)(message.toStdString().c_str()), message.length());
+}
+
+int Account::getNumPeersInGroup(int gId) const {
+  return tox_group_number_peers(tox, gId);
+}
+
+QStringList Account::getGroupPeerNames(int gId) const {
+  int peers = getNumPeersInGroup(gId);
+  uint8_t names[getNumPeersInGroup(gId)][TOX_MAX_NAME_LENGTH];
+  tox_group_get_names(tox, gId, names, peers);
+  
+  QStringList ret;
+  
+  for(int idx = 0; idx < peers; ++idx) {
+    ret.append((char*)(names[idx]));
+  }
+  
+  return ret;
+}
+
+QString Account::getGroupPeerName(int gId, int pId) {
+  uint8_t name[TOX_MAX_NAME_LENGTH];
+  tox_group_peername(tox, gId, pId, name);
+  
+  return QString(reinterpret_cast<char*>(name));
+}
+
 void Account::bind(Core* core) {
     tox_callback_friend_request(tox, &Account::onFriendRequest, core);
     tox_callback_friend_message(tox, &Account::onFriendMessage, core);
@@ -203,6 +249,11 @@ void Account::bind(Core* core) {
     tox_callback_status_message(tox, &Account::onStatusMessageChanged, core);
     tox_callback_user_status(tox, &Account::onUserStatusChanged, core);
     tox_callback_connection_status(tox, &Account::onConnectionStatusChanged, core);
+    tox_callback_typing_change(tox, &Account::onTypingChanged, core);
+    tox_callback_group_action(tox, &Account::onGroupAction, core);
+    tox_callback_group_invite(tox, &Account::onGroupInvite, core);
+    tox_callback_group_message(tox, &Account::onGroupMessage, core);
+    tox_callback_group_namelist_change(tox, &Account::onGroupNamelistChange, core);
 }
 
 void Account::save(const QString &file, const QString &password) const
@@ -312,4 +363,34 @@ void Account::onConnectionStatusChanged(Tox*/* tox*/, int friendId, uint8_t stat
 void Account::onAction(Tox*/* tox*/, int friendId, uint8_t *cMessage, uint16_t cMessageSize, void *core)
 {
     emit static_cast<Core*>(core)->actionReceived(friendId, Core::CString::toString(cMessage, cMessageSize));
+}
+
+void Account::onTypingChanged(Tox* tox, int32_t friendId, int is_typing, void * core) {
+    emit static_cast<Core*>(core)->typingChanged(friendId, is_typing);
+}
+
+void Account::onGroupAction(Tox *tox, int groupnumber, int friendgroupnumber, uint8_t * action, uint16_t length, void *core) {
+  emit static_cast<Core*>(core)->groupActionReceived(groupnumber, friendgroupnumber, Core::CString::toString(action, length));
+}
+
+void Account::onGroupInvite(Tox *tox, int friendnumber, uint8_t *group_public_key, void *core) {
+  emit static_cast<Core*>(core)->groupInviteReceived(friendnumber, group_public_key);
+}
+
+void Account::onGroupMessage(Tox *tox, int groupnumber, int friendgroupnumber, uint8_t * message, uint16_t length, void *core) {
+  emit static_cast<Core*>(core)->groupMessageReceived(groupnumber, friendgroupnumber, Core::CString::toString(message, length));
+}
+
+void Account::onGroupNamelistChange(Tox *tox, int groupnumber, int peernumber, uint8_t change, void *core) {
+  switch(change) {
+    case TOX_CHAT_CHANGE_PEER_ADD:
+      emit static_cast<Core*>(core)->groupPeerAdded(groupnumber, peernumber);
+      break;
+    case TOX_CHAT_CHANGE_PEER_DEL:
+      emit static_cast<Core*>(core)->groupPeerRemoved(groupnumber, peernumber);
+      break;
+    case TOX_CHAT_CHANGE_PEER_NAME:
+      emit static_cast<Core*>(core)->groupPeerRenamed(groupnumber, peernumber);
+      break;
+  }
 }

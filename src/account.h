@@ -4,6 +4,7 @@
 #include<memory>
 
 #include <QObject>
+#include <QStringList>
 
 #include <tox.h>
 
@@ -21,7 +22,6 @@ public:
     explicit Account(QObject *parent = 0);
     ~Account();
 
-    void init();
     void bind(Core* core);
     void save(const QString& file, const QString& password) const;
     int load(const QString &file, const QString& password);
@@ -41,6 +41,14 @@ public:
     QString getFriendUserId(int fId) const;
     QString getFriendName(int fId) const;
     Status getFriendStatus(int fid) const;
+    
+    int createGroupChat();
+    void deleteGroupChat(int gId);
+    int inviteFriendToGroup(int fId, int gId);
+    int sendGroupMessage(int gId, const QString& message) const;
+    int getNumPeersInGroup(int gId) const;
+    QStringList getGroupPeerNames(int gId) const;
+    QString getGroupPeerName(int gId, int pId);
 
     void setIPv6Enabled(bool enabled);
     bool getIPv6Enabled() const;
@@ -58,6 +66,11 @@ private:
     static void onUserStatusChanged(Tox* tox, int friendId, uint8_t userstatus, void* core);
     static void onConnectionStatusChanged(Tox* tox, int friendId, uint8_t status, void* core);
     static void onAction(Tox* tox, int friendId, uint8_t* cMessage, uint16_t cMessageSize, void* core);
+    static void onTypingChanged(Tox* tox, int32_t friendnumber, int is_typing, void * core);
+    static void onGroupAction(Tox *tox, int groupnumber, int friendgroupnumber, uint8_t * action, uint16_t length, void *core);
+    static void onGroupInvite(Tox *tox, int friendnumber, uint8_t *group_public_key, void *core);
+    static void onGroupMessage(Tox *tox, int groupnumber, int friendgroupnumber, uint8_t * message, uint16_t length, void *core);
+    static void onGroupNamelistChange(Tox *tox, int groupnumber, int peernumber, uint8_t change, void *core);
     
     void saveState();
 
