@@ -28,28 +28,28 @@ public:
     PagesWidget(QWidget* parent);
 
 private:
-    ChatPageWidget* widget(int friendId) const;
+    ChatPageWidget* widget(int64_t friendId) const;
 
 private slots:
     void onMessageSent(const QString& message);
     void onActionToSend(const QString& action);
 
 public slots:
-    void addPage(int friendId, const QString& username);
-    void removePage(int friendId);
-    void activatePage(int friendId);
-    void statusChanged(int friendId, Status status);
-    void usernameChanged(int friendId, const QString& username);
-    void statusMessageChanged(int friendId, const QString& statusMessage);
-    void messageReceived(int friendId, const QString& message);
-    void actionReceived(int friendId, const QString& message);
+    void addPage(int64_t friendId, const QString& username);
+    void removePage(int64_t friendId);
+    void activatePage(int64_t friendId);
+    void statusChanged(int64_t friendId, Status status);
+    void usernameChanged(int64_t friendId, const QString& username);
+    void statusMessageChanged(int64_t friendId, const QString& statusMessage);
+    void messageReceived(int64_t friendId, const QString& message);
+    void actionReceived(int64_t friendId, const QString& message);
 
-    void messageSentResult(int friendId, const QString& message, int messageId);
-    void actionResult(int friendId, const QString &action, int success);
+    void messageSentResult(int64_t friendId, const QString& message, int messageId);
+    void actionResult(int64_t friendId, const QString &action, int success);
 
 signals:
-    void sendMessage(int friendId, const QString& message);
-    void sendAction(int friendId, const QString& action);
+    void sendMessage(int64_t friendId, const QString& message);
+    void sendAction(int64_t friendId, const QString& action);
 
 };
 

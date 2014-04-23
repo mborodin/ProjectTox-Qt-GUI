@@ -28,7 +28,7 @@ PagesWidget::PagesWidget(QWidget* parent) :
 }
 
 // if preformance would be critical, replace with QHash<int friendId, ChatPageWidget*>
-ChatPageWidget* PagesWidget::widget(int friendId) const
+ChatPageWidget* PagesWidget::widget(int64_t friendId) const
 {
     for (int i = 0; i < count(); i++) {
         ChatPageWidget* chatPage = dynamic_cast<ChatPageWidget*>(QStackedWidget::widget(i));
@@ -39,7 +39,7 @@ ChatPageWidget* PagesWidget::widget(int friendId) const
     return nullptr;
 }
 
-void PagesWidget::addPage(int friendId, const QString& username)
+void PagesWidget::addPage(int64_t friendId, const QString& username)
 {
     ChatPageWidget* chatPage = new ChatPageWidget(friendId, this);
     chatPage->setUsername(username);
@@ -49,12 +49,12 @@ void PagesWidget::addPage(int friendId, const QString& username)
     qDebug() << "page" << friendId << "added" << count();
 }
 
-void PagesWidget::activatePage(int friendId)
+void PagesWidget::activatePage(int64_t friendId)
 {
     setCurrentWidget(widget(friendId));
 }
 
-void PagesWidget::removePage(int friendId)
+void PagesWidget::removePage(int64_t friendId)
 {
     ChatPageWidget* chatPage = widget(friendId);
     removeWidget(chatPage);
@@ -62,17 +62,17 @@ void PagesWidget::removePage(int friendId)
     qDebug() << "page" << friendId << "removed" << count();
 }
 
-void PagesWidget::usernameChanged(int friendId, const QString& username)
+void PagesWidget::usernameChanged(int64_t friendId, const QString& username)
 {
     widget(friendId)->setUsername(username);
 }
 
-void PagesWidget::statusChanged(int friendId, Status status)
+void PagesWidget::statusChanged(int64_t friendId, Status status)
 {
     widget(friendId)->setStatus(status);
 }
 
-void PagesWidget::statusMessageChanged(int friendId, const QString& statusMessage)
+void PagesWidget::statusMessageChanged(int64_t friendId, const QString& statusMessage)
 {
     widget(friendId)->setStatusMessage(statusMessage);
 }
@@ -89,22 +89,22 @@ void PagesWidget::onActionToSend(const QString &action)
     emit sendAction(chatPage->getFriendId(), action);
 }
 
-void PagesWidget::messageReceived(int friendId, const QString &message)
+void PagesWidget::messageReceived(int64_t friendId, const QString &message)
 {
     widget(friendId)->messageReceived(message);
 }
 
-void PagesWidget::actionReceived(int friendId, const QString &message)
+void PagesWidget::actionReceived(int64_t friendId, const QString &message)
 {
     widget(friendId)->actionReceived(message);
 }
 
-void PagesWidget::messageSentResult(int friendId, const QString &message, int messageId)
+void PagesWidget::messageSentResult(int64_t friendId, const QString &message, int messageId)
 {
     widget(friendId)->messageSentResult(message, messageId);
 }
 
-void PagesWidget::actionResult(int friendId, const QString &action, int success)
+void PagesWidget::actionResult(int64_t friendId, const QString &action, int success)
 {
     if (success) {
         widget(friendId)->actionSentResult(action);
