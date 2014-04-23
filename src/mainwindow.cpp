@@ -104,8 +104,6 @@ MainWindow::MainWindow(QWidget* parent)
     connect(friendsWidget, &FriendsWidget::friendSelectionChanged, pages, &PagesWidget::activatePage);
     connect(friendsWidget, &FriendsWidget::friendStatusChanged, pages, &PagesWidget::statusChanged);
 
-    //FIXME: start core in a separate function
-    //all connections to `core` should be done after its creation because it registers some types
     core = new Core();
 
     coreThread = new QThread(this);
@@ -114,11 +112,11 @@ MainWindow::MainWindow(QWidget* parent)
 
     connect(core, &Core::connected, this, &MainWindow::onConnected);
     connect(core, &Core::disconnected, this, &MainWindow::onDisconnected);
-    connect(core, &Core::friendRequestRecieved, this, &MainWindow::onFriendRequestRecieved);
+    connect(core, &Core::friendRequestReceived, this, &MainWindow::onFriendRequestReceived);
     connect(core, SIGNAL(friendStatusChanged(int, Status)), friendsWidget, SLOT(setStatus(int, Status)));
     connect(core, &Core::friendAddressGenerated, ourUserItem, &OurUserItemWidget::setFriendAddress);
     connect(core, &Core::friendAdded, friendsWidget, &FriendsWidget::addFriend);
-    connect(core, &Core::friendMessageRecieved, pages, &PagesWidget::messageReceived);
+    connect(core, &Core::friendMessageReceived, pages, &PagesWidget::messageReceived);
     connect(core, &Core::actionReceived, pages, &PagesWidget::actionReceived);
     connect(core, &Core::friendUsernameChanged, friendsWidget, &FriendsWidget::setUsername);
     connect(core, &Core::friendUsernameChanged, pages, &PagesWidget::usernameChanged);
@@ -212,7 +210,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-void MainWindow::onFriendRequestRecieved(const QString& userId, const QString& message)
+void MainWindow::onFriendRequestReceived(const QString& userId, const QString& message)
 {
     FriendRequestDialog dialog(this, userId, message);
 
