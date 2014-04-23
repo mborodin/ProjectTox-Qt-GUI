@@ -27,6 +27,12 @@
 
 class MainWindow;
 
+#define GET_USER_ID(a) ( (a) & 0x0000FFFF )
+#define GET_GROUP_ID(a) ( (a) >> 32 )
+#define MAKE_USER_ID(a) ( (a) | 0xFFFF0000 )
+#define MAKE_GROUP_ID(a) ( ((int64_t)(a)) << 32 )
+#define MAKE_GROUP_USER_ID(a, b) ( ( ((int64_t)(a)) << 32 ) | b )
+
 class Core : public QObject
 {
     Q_OBJECT
@@ -35,6 +41,9 @@ public:
     ~Core();
 
     void init(QThread* coreThread);
+    
+    void groupActionReceived(int groupnumber, int friendgroupnumber, const QString& action);
+    void groupMessageReceived(int groupnumber, int friendgroupnumber, const QString& message);
 
 private:
 
@@ -117,8 +126,8 @@ public slots:
 
     void removeFriend(int friendId);
 
-    void sendMessage(int friendId, const QString& message);
-    void sendAction(int friendId, const QString& action);
+    void sendMessage(int64_t friendId, const QString& message);
+    void sendAction(int64_t friendId, const QString& action);
 
     void setUsername(const QString& username);
     void setStatusMessage(const QString& message);
@@ -132,8 +141,8 @@ signals:
     void connected();
     void disconnected();
 
-    void friendRequestRecieved(const QString& userId, const QString& message);
-    void friendMessageRecieved(int friendId, const QString& message);
+    void friendRequestReceived(const QString& userId, const QString& message);
+    void friendMessageReceived(int64_t friendId, const QString& message);
 
     void friendAdded(int friendId, const QString& userId, const Status& status);
 
@@ -149,8 +158,8 @@ signals:
     void statusMessageSet(const QString& message);
     void statusSet(const Status& status);
 
-    void messageSentResult(int friendId, const QString& message, int messageId);
-    void actionSentResult(int friendId, const QString& action, int success);
+    void messageSentResult(int64_t friendId, const QString& message, int messageId);
+    void actionSentResult(int64_t friendId, const QString& action, int success);
     
     void typingChanged(int friendId, bool isTyping);
 
@@ -160,9 +169,7 @@ signals:
     void failedToSetStatusMessage(const QString& message);
     void failedToSetStatus(const Status& status);
     
-    void groupActionReceived(int groupnumber, int friendgroupnumber, const QString& action);
     void groupInviteReceived(int friendnumber, uint8_t *group_public_key);
-    void groupMessageReceived(int groupnumber, int friendgroupnumber, const QString& message);
     void groupPeerAdded(int groupnumber, int peernumber);
     void groupPeerRemoved(int groupnumber, int peernumber);
     void groupPeerRenamed(int groupnumber, int peernumber);

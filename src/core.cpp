@@ -42,6 +42,14 @@ void Core::init(QThread* coreThread) {
     connect(coreThread, &QThread::started, this, &Core::start);
 }
 
+void Core::groupActionReceived(int groupnumber, int friendgroupnumber, const QString& action) {
+  emit actionReceived(MAKE_GROUP_USER_ID(groupnumber, friendgroupnumber), action);
+}
+
+void Core::groupMessageReceived(int groupnumber, int friendgroupnumber, const QString& message) {
+  emit friendMessageReceived(MAKE_GROUP_USER_ID(groupnumber, friendgroupnumber), message);
+}
+
 void Core::acceptFriendRequest(const QString& userId)
 {
     int friendId = account->acceptFriendRequest(CUserId(userId).data());
@@ -66,7 +74,7 @@ void Core::requestFriendship(const QString& friendAddress, const QString& messag
     }
 }
 
-void Core::sendMessage(int friendId, const QString& message)
+void Core::sendMessage(int64_t friendId, const QString& message)
 {
     CString cMessage(message);
 
@@ -74,7 +82,7 @@ void Core::sendMessage(int friendId, const QString& message)
     emit messageSentResult(friendId, message, messageId);
 }
 
-void Core::sendAction(int friendId, const QString &action)
+void Core::sendAction(int64_t friendId, const QString &action)
 {
     CString cMessage(action);
     int ret = account->sendAction(friendId, cMessage.data(), cMessage.size());
