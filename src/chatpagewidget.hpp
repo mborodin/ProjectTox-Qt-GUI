@@ -19,23 +19,23 @@
 
 #include "frienditemwidget.hpp"
 #include "inputtextwidget.hpp"
+#include "ichatpagewidget.hpp"
 
 #include <QTextBrowser>
 #include <QTextEdit>
-#include <QWidget>
+
 
 class MessageDisplayWidget;
 class QToolButton;
 
-class ChatPageWidget : public QWidget
+class ChatPageWidget : public IChatPageWidget
 {
     Q_OBJECT
 public:
     ChatPageWidget(int friendId, QWidget* parent = 0);
-    int getFriendId() const;
-    void setUsername(const QString& username);
-    void setStatus(Status status);
-    void setStatusMessage(const QString& statusMessage);
+    void setTitle(const QString& username);
+    //void setStatus(Status status);
+    //void setStatusMessage(const QString& statusMessage);
 
 private:
     FriendItemWidget* friendItem;
@@ -44,19 +44,13 @@ private:
     InputTextWidget* input;
     QToolButton *emoticonButton;
 
-    int friendId;
     QString username;
-    Status status;
 
 public slots:
     void messageReceived(const QString& message);
     void messageSentResult(const QString& message, int messageId);
     void actionReceived(const QString& message);
     void actionSentResult(const QString& message);
-
-signals:
-    void sendMessage(const QString& message);
-    void sendAction(const QString& action);
 
 };
 

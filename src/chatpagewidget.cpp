@@ -21,14 +21,28 @@
 #include "customhintwidget.hpp"
 #include "messagedisplaywidget.hpp"
 #include "emoticonmenu.hpp"
+#include <chatpagewidgetfactory.h>
 
 #include <QSplitter>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
+namespace factory {
+    class ChatPageWidget: public ChatPageWidgetFactory::Method {
+	bool isProviderFor(int64_t id) const {
+	    return GET_USER_ID(ENSURE_ONE_OF(id)) != INVALID_ID;
+	}
+	IChatPageWidget* construct(int64_t id, QWidget* parent) {
+	    return new ::ChatPageWidget(ENSURE_UID(id), parent);
+	}
+    };
+REGISTER_CHATWIDGET(ChatPageWidget);
+};
+
 ChatPageWidget::ChatPageWidget(int friendId, QWidget* parent) :
-    QWidget(parent), friendId(friendId)
+    IChatPageWidget(parent)
 {
+    setFriendId(friendId);
     friendItem = new FriendItemWidget(this);
     display = new MessageDisplayWidget(this);
 
@@ -66,22 +80,18 @@ ChatPageWidget::ChatPageWidget(int friendId, QWidget* parent) :
     layout->setContentsMargins(0, 0, 2, 3);
 }
 
-int ChatPageWidget::getFriendId() const
-{
-    return friendId;
-}
-
 void ChatPageWidget::messageReceived(const QString& message)
 {
     display->appendMessage(username, message, -1, false);
 }
 
-void ChatPageWidget::setUsername(const QString& newUsername)
+void ChatPageWidget::setTitle(const QString& newUsername)
 {
     username = newUsername;
     friendItem->setUsername(username);
 }
 
+/*
 void ChatPageWidget::setStatus(Status newStatus)
 {
     status = newStatus;
@@ -94,6 +104,7 @@ void ChatPageWidget::setStatusMessage(const QString& statusMessage)
 {
     friendItem->setStatusMessage(statusMessage);
 }
+*/
 
 void ChatPageWidget::messageSentResult(const QString& message, int messageId)
 {
