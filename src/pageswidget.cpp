@@ -38,7 +38,7 @@ ChatPageWidget* PagesWidget::widget(int64_t friendId) const
 void PagesWidget::addPage(int64_t friendId, const QString& username)
 {
     ChatPageWidget* chatPage = new ChatPageWidget(friendId, this);
-    chatPage->setUsername(username);
+    chatPage->setTitle(username);
     connect(chatPage, &ChatPageWidget::sendMessage, this, &PagesWidget::onMessageSent);
     connect(chatPage, &ChatPageWidget::sendAction,  this, &PagesWidget::onActionToSend);
     addWidget(chatPage);
@@ -60,17 +60,17 @@ void PagesWidget::removePage(int64_t friendId)
 
 void PagesWidget::usernameChanged(int64_t friendId, const QString& username)
 {
-    widget(friendId)->setUsername(username);
+    widget(friendId)->setTitle(username);
 }
 
 void PagesWidget::statusChanged(int64_t friendId, Status status)
 {
-    widget(friendId)->setStatus(status);
+    //widget(friendId)->setStatus(status);
 }
 
 void PagesWidget::statusMessageChanged(int64_t friendId, const QString& statusMessage)
 {
-    widget(friendId)->setStatusMessage(statusMessage);
+    //widget(friendId)->setStatusMessage(statusMessage);
 }
 
 void PagesWidget::onMessageSent(const QString& message)
