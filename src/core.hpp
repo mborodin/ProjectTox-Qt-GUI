@@ -27,11 +27,15 @@
 
 class MainWindow;
 
-#define GET_USER_ID(a) ( (a) & 0x0000FFFF )
+#define INVALID_ID 0xFFFF
+#define GET_USER_ID(a) ( (int)((a) & 0x0000FFFF) )
 #define GET_GROUP_ID(a) ( (a) >> 32 )
 #define MAKE_USER_ID(a) ( (a) | 0xFFFF0000 )
-#define MAKE_GROUP_ID(a) ( ((int64_t)(a)) << 32 )
+#define MAKE_GROUP_ID(a) ( ( ((int64_t)(a)) << 32 ) | 0x0000FFFF )
 #define MAKE_GROUP_USER_ID(a, b) ( ( ((int64_t)(a)) << 32 ) | b )
+#define ENSURE_GID(a) ( ( (a) & 0xFFFF0000 ) | 0x0000FFFF )
+#define ENSURE_UID(a) ( ( 0xFFFF0000 | ( (a) & 0x0000FFFF ) ) )
+#define ENSURE_ONE_OF(a) ( GET_GROUP_ID(a) == INVALID_ID ? a : ENSURE_GID(a) )
 
 class Core : public QObject
 {
