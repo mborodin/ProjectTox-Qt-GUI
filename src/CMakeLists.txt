@@ -5,7 +5,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Settings ${TOXCORE_DIR})
 #aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} QTox_SRCS)
 #aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/Settings QTox_SRCS_SETTINGS)
 
-set(QTox_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/aboutdialog.cpp
+set(QTox_SRCS chatpagewidgetfactory.cpp ${CMAKE_CURRENT_SOURCE_DIR}/aboutdialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/account.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/addfrienddialog.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/chatpagewidget.cpp
